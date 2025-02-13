@@ -87,7 +87,7 @@ app.post('/api/persons', (request, response) => {
     })
   }
 
-  const person = {
+  const note = {
     content: body.content,
     important: Boolean(body.important) || false,
     id: generateId(),
