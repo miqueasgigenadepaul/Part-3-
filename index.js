@@ -75,6 +75,7 @@ app.post('/api/persons', (request, response) => {
     name: body.name,
     number: body.number,
   }
+  
   persons = persons.concat(newPerson)
   response.json(newPerson)
 })
