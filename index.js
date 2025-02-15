@@ -65,7 +65,7 @@ app.post('/api/persons', (request, response) => {
   const body = request.body 
 
   if (!body.name || !body.number){
-    response.status(404).json({
+    return response.status(404).json({
       error: 'name or number missing'
     })
   }
@@ -75,7 +75,7 @@ app.post('/api/persons', (request, response) => {
     name: body.name,
     number: body.number,
   }
-  
+
   persons = persons.concat(newPerson)
   response.json(newPerson)
 })
