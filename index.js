@@ -55,14 +55,33 @@ app.post('/api/persons', (request, response) => {
     return response.status(400).json({ error: 'content missing' })
   }
 
-  const person = new Person({
-    name: body.name,
-    phone: body.phone,
-  })
-
-  person.save().then(savedPerson => {
-    response.json(savedPerson)
-  })
+  Person.find({})
+    .then(persons => {
+      // find if a person with the same name exists
+      const existingPerson = persons.find(person => person.name === body.name)
+      const randomPhoneNumber = Math.floor(Math.random() * 1000000000)
+      if (existingPerson) {
+        // actualizo el numero de la persona 
+        existingPerson.phone = randomPhoneNumber 
+        return existingPerson.save()
+          .then(updatedPerson => response.json(updatedPerson))
+          .catch(error => next(error))
+      } else {
+        // agrego persona 
+        const person = new Person({
+          name: body.name,
+          phone: body.phone,
+        })
+      
+        person.save()
+          .then(savedPerson => {
+            response.json(savedPerson)
+          })
+          .catch(error => next(error))
+      }
+    })
+  
+  
 })
 
 app.get('/api/persons/:id', (request, response, next) => {
