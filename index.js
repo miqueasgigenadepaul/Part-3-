@@ -2,9 +2,9 @@ require('dotenv').config() // it's important that dotenv gets imported before th
 const express = require('express')
 const app = express()
 
-const Note = require('./models/note')
+const Person = require('./models/person')
 
-let notes = [
+let persons = [
 ]
 
 app.use(express.static('dist'))
@@ -32,40 +32,38 @@ app.get('/', (request, response) => {
   response.send('<h1>Hello World!</h1>')
 })
 
-app.get('/api/notes', (request, response) => {
-  Note.find({}).then(notes => {
-    response.json(notes)
+app.get('/api/persons', (request, response) => {
+  Person.find({}).then(persons => {
+    response.json(persons)
   })
 })
 
-// USING DATABASE IN ROUTE HANDLERS
-app.post('/api/notes', (request, response) => {
+app.post('/api/persons', (request, response) => {
   const body = request.body
 
   if (!body.content) {
     return response.status(400).json({ error: 'content missing' })
   }
 
-  const note = new Note({
-    content: body.content,
-    important: body.important || false,
+  const person = new Person({
+    name: body.name,
+    phone: body.phone || false,
   })
 
-  note.save().then(savedNote => {
-    response.json(savedNote)
-  })
-})
-
-// fetching an individual note using Mongoose's findById method
-app.get('/api/notes/:id', (request, response) => {
-  Note.findById(request.params.id).then(note => {
-    response.json(note)
+  person.save().then(savedPerson => {
+    response.json(savedPerson)
   })
 })
 
-app.delete('/api/notes/:id', (request, response) => {
+app.get('/api/persons/:id', (request, response) => {
+  Person.findById(request.params.id).then(person => {
+    response.json(person)
+  })
+})
+
+app.delete('/api/persons/:id', (request, response) => {
   const id = Number(request.params.id)
-  notes = notes.filter(note => note.id !== id)
+  persons = persons.filter(person => person.id !== id)
 
   response.status(204).end()
 })
