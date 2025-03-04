@@ -41,13 +41,13 @@ app.get('/api/persons', (request, response) => {
 app.post('/api/persons', (request, response) => {
   const body = request.body
 
-  if (!body.content) {
+  if (!body.name || !body.phone) {
     return response.status(400).json({ error: 'content missing' })
   }
 
   const person = new Person({
     name: body.name,
-    phone: body.phone || false,
+    phone: body.phone,
   })
 
   person.save().then(savedPerson => {
