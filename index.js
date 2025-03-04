@@ -17,6 +17,16 @@ const requestLogger = (request, response, next) => {
   next()
 }
 
+const errorHandler = (error, request, response, next) => {
+  console.error(error.message)
+
+  if (error.name === 'CasteError'){
+    return response.status(400).send({error: 'malformatted id'})
+  } 
+  
+  next(error)
+}
+
 const cors = require('cors')
 
 app.use(cors())
@@ -70,6 +80,8 @@ app.delete('/api/persons/:id', (request, response) => {
 })
 
 app.use(unknownEndpoint)
+
+app.use(errorHandler)
 
 const PORT = process.env.PORT
 app.listen(PORT, () => {
