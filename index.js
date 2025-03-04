@@ -20,7 +20,7 @@ const requestLogger = (request, response, next) => {
 const errorHandler = (error, request, response, next) => {
   console.error(error.message)
 
-  if (error.name === 'CasteError'){
+  if (error.name === 'CastError'){
     return response.status(400).send({error: 'malformatted id'})
   } 
   
@@ -65,10 +65,29 @@ app.post('/api/persons', (request, response) => {
   })
 })
 
-app.get('/api/persons/:id', (request, response) => {
-  Person.findById(request.params.id).then(person => {
-    response.json(person)
-  })
+app.get('/api/persons/:id', (request, response, next) => {
+  Person.findById(request.params.id)
+    .then(person => {
+      if (!person){
+        return response.status(404).json({error: 'Person not found'})
+      }
+      response.json(person)
+    })
+    .catch(error => next(error))
+})
+
+app.get('/info', (request, response) => {
+  Person.countDocuments({})
+    .then(count => {
+      response.send(
+        `<p>Phonebook has info for ${count} people </p>
+          <p>${new Date()}</p>`
+      )
+    })
+    .catch(error => {
+      console.error('Error fetching count:', error)
+      response.status(500).send({error: 'Internal Server Error'})
+    })
 })
 
 app.delete('/api/persons/:id', (request, response) => {
