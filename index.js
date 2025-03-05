@@ -1,4 +1,5 @@
 require('dotenv').config() // it's important that dotenv gets imported before the note model
+console.log('MongoDB URI', process.env.MONGODB_URI)
 const express = require('express')
 const app = express()
 
