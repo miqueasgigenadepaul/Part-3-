@@ -29,7 +29,6 @@ if (process.argv.length === 3){
     mongoose.connection.close()
   })
 }
-
 // if name and number are given, add person
 else if (process.argv.length === 5) {
   const name = process.argv[3]
