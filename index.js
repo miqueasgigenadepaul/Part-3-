@@ -1,7 +1,6 @@
 require('dotenv').config() // it's important that dotenv gets imported before the note model
 const express = require('express')
 const app = express()
-const path = require('path');
 const Person = require('./models/person')
 
 let persons = [
@@ -138,10 +137,6 @@ app.post('/api/persons', (request, response, next) => {
   app.use(unknownEndpoint)
   
   app.use(errorHandler)
-
-  app.get('*', (request, response) => {
-    response.sendFile(path.resolve(__dirname, 'dist', 'index.html'));
-  })
   
   const PORT = process.env.PORT
   app.listen(PORT, () => {
