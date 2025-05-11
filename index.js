@@ -5,6 +5,8 @@ const Person = require('./models/person')
 
 app.use(express.static('dist'))
 
+// En tu servidor Node.js con Express
+
 const requestLogger = (request, response, next) => {
   console.log('Method:', request.method)
   console.log('Path:  ', request.path)
@@ -38,6 +40,12 @@ const unknownEndpoint = (request, response) => {
 
 app.get('/', (request, response) => {
   response.send('<h1>Hello World!</h1>')
+})
+
+app.get('/api/celulares', async (req, res) => {
+  const response = await fetch('https://api.mercadolibre.com/sites/MLA/search?q=celulares')
+  const data = await response.json()
+  res.json(data)
 })
 
 app.get('/api/persons', (request, response) => {
